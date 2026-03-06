@@ -1,16 +1,6 @@
 {
-	"main": "dist/_worker.js/index.js",
-	"name": "07-astro-http",
+  "name": "astro-course-bolg-cocos",
   "compatibility_date": "2026-03-06",
-  "compatibility_flags": [
-    "nodejs_compat",
-    "global_fetch_strictly_public"
-  ],
-	"assets": {
-		"binding": "ASSETS",
-		"directory": "./dist"
-	},
-	"observability": {
-    "enabled": true
-  }
+  "compatibility_flags": ["nodejs_compat"],
+  "pages_build_output_dir": "dist"
 }
