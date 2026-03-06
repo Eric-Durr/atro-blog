@@ -1,17 +1,21 @@
 ---
 interface Props {
-	date: Date;
+	date?: Date | string | null;
 }
 
 const { date } = Astro.props;
+
+const parsedDate = date ? new Date(date) : null;
+
+if (!parsedDate || Number.isNaN(parsedDate.getTime())) {
+	// Fallback para evitar errores cuando falta o viene mal la fecha.
+	// Puedes cambiar esto por una fecha por defecto o un mensaje vacío.
+}
 ---
 
-<time datetime={date.toISOString()}>
-	{
-		date.toLocaleDateString('en-us', {
-			year: 'numeric',
-			month: 'short',
-			day: 'numeric',
-		})
-	}
-</time>
+<time datetime={parsedDate?.toDateString() ?? ''}>
+	{parsedDate ? parsedDate.toLocaleDateString('en-us', {
+		year: 'numeric',
+		month: 'short',
+		day: 'numeric',
+	}) : 'No date'}</time>

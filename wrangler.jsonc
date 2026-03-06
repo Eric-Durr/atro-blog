@@ -1,6 +1,8 @@
 {
-  "name": "astro-course-bolg-cocos",
+  "name": "07-astro-http",
   "compatibility_date": "2026-03-06",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "pages_build_output_dir": "dist"
 }
