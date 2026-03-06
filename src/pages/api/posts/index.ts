@@ -2,6 +2,8 @@ import type { APIRoute } from "astro";
 import { getCollection, getEntry } from "astro:content";
 
 
+export const prerender = false;
+
 export const GET: APIRoute = async ({ request }) => {
   const posts = await getCollection("blog");
 
