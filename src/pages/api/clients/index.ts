@@ -1,6 +1,5 @@
 import type { APIRoute } from "astro";
 import { Clients, db } from "astro:db";
-import type { bool } from "sharp";
 
 
 export const prerender = false;
@@ -65,34 +64,3 @@ export const POST: APIRoute = async ({ request }) => {
   }
 }
 
-
-
-export const PUT: APIRoute = async ({ request }) => {
-  
-  return new Response(JSON.stringify({ method: "PUT" }), {
-    status: 200,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-}
-
-export const DELETE: APIRoute = async ({ request }) => {
-  
-  return new Response(JSON.stringify({ method: "DELETE" }), {
-    status: 200,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-}
-
-export const PATCH: APIRoute = async ({ request }) => {
-  
-  return new Response(JSON.stringify({ method: "PATCH" }), {
-    status: 200,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-}
