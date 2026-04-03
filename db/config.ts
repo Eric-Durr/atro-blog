@@ -11,7 +11,7 @@ const Author = defineTable({
 
 const Clients = defineTable({
   columns: {
-    id: column.number({ primaryKey: true }),
+    id: column.number({ primaryKey: true, autoIncrement: true }),
     name: column.text(),
     age: column.number(),
     isActive: column.boolean(),
