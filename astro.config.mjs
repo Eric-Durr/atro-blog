@@ -1,4 +1,5 @@
 // @ts-check
+import { fileURLToPath } from 'node:url';
 
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
@@ -14,4 +15,13 @@ export default defineConfig({
   adapter: cloudflare({
     prerenderEnvironment: 'node',
   }),
+  vite: {
+    resolve: {
+      alias: {
+        'cross-fetch': fileURLToPath(
+          new URL('./src/lib/shims/cross-fetch.ts', import.meta.url),
+        ),
+      },
+    },
+  },
 });
