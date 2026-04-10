@@ -6,19 +6,18 @@
     "node": "22.16.0"
   },
   "scripts": {
-    "dev": "ASTRO_LOCAL_ADAPTER=node astro dev",
-    "dev:remote": "astro dev --remote",
-    "build": "astro build --remote",
+    "dev": "astro dev",
+    "dev:remote": "astro dev",
+    "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.1.8",
-    "@astrojs/db": "^0.20.1",
     "@astrojs/mdx": "^5.0.3",
-    "@astrojs/node": "^10.0.4",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
+    "@libsql/client": "^0.17.0",
     "astro": "^6.1.5",
     "sharp": "^0.34.5",
     "wrangler": "^4.81.1"

@@ -1,13 +1,18 @@
 import type { APIRoute } from "astro";
-import { Clients, db } from "astro:db";
+import { parseClientRow, toSqlBoolean, turso } from "../../../lib/turso";
 
 
 export const prerender = false;
 
-export const GET: APIRoute = async ({ request }) => {
+export const GET: APIRoute = async () => {
 
   try {
-  const clients = await db.select().from(Clients).all();
+    const result = await turso.execute(
+      "SELECT id, name, age, isActive FROM Clients ORDER BY id",
+    );
+    const clients = result.rows.map((row) =>
+      parseClientRow(row as Record<string, unknown>)
+    );
 
     return new Response(JSON.stringify({method: "GET", clients}), {
       status: 200,
@@ -35,13 +40,27 @@ export const GET: APIRoute = async ({ request }) => {
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const { id, ...body } = await request.json();
-    
-    const {lastInsertRowid} =  await db.insert(Clients).values({
+    const payload = await request.json();
+    const id = payload.id == null ? null : Number(payload.id);
+    const client = {
       id,
-      ...body
+      name: String(payload.name ?? ""),
+      age: Number(payload.age),
+      isActive: Boolean(payload.isActive),
+    };
+
+    const result = await turso.execute({
+      sql: "INSERT INTO Clients (id, name, age, isActive) VALUES (?, ?, ?, ?)",
+      args: [id, client.name, client.age, toSqlBoolean(client.isActive)],
     });
-    return new Response(JSON.stringify({ method: "POST", id: +lastInsertRowid!.toString(),body }), {
+
+    return new Response(JSON.stringify({
+      method: "POST",
+      client: {
+        ...client,
+        id: id ?? Number(result.lastInsertRowid),
+      },
+    }), {
       status: 201,
       headers: {
         "Content-Type": "application/json",
@@ -63,4 +82,3 @@ export const POST: APIRoute = async ({ request }) => {
     );
   }
 }
-
