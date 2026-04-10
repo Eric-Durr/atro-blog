@@ -1,12 +1,17 @@
 import type { APIRoute } from "astro";
-import { parseClientRow, toSqlBoolean, turso } from "../../../lib/turso";
+import {
+  getTursoClientFromLocals,
+  parseClientRow,
+  toSqlBoolean,
+} from "../../../lib/turso";
 
 
 export const prerender = false;
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async ({ locals }) => {
 
   try {
+    const turso = getTursoClientFromLocals(locals);
     const result = await turso.execute(
       "SELECT id, name, age, isActive FROM Clients ORDER BY id",
     );
@@ -38,8 +43,9 @@ export const GET: APIRoute = async () => {
 };
 
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ locals, request }) => {
   try {
+    const turso = getTursoClientFromLocals(locals);
     const payload = await request.json();
     const id = payload.id == null ? null : Number(payload.id);
     const client = {

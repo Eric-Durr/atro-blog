@@ -1,12 +1,17 @@
 import type { APIRoute } from "astro";
-import { parseClientRow, toSqlBoolean, turso } from "../../../lib/turso";
+import {
+  getTursoClientFromLocals,
+  parseClientRow,
+  toSqlBoolean,
+} from "../../../lib/turso";
 
 export const prerender = false;
 
 
-export const GET: APIRoute = async ({params }) => {
+export const GET: APIRoute = async ({ locals, params }) => {
 
   try {
+    const turso = getTursoClientFromLocals(locals);
     const clientId = Number(params.clientId ?? "");
     const result = await turso.execute({
       sql: "SELECT id, name, age, isActive FROM Clients WHERE id = ?",
@@ -48,9 +53,10 @@ export const GET: APIRoute = async ({params }) => {
 
 
 
-export const PATCH: APIRoute = async ({params, request}) => {
+export const PATCH: APIRoute = async ({ locals, params, request }) => {
   
 try {
+    const turso = getTursoClientFromLocals(locals);
     const body = await request.json();
     const clientId = Number(params.clientId ?? "");
     const updates = [];
@@ -124,9 +130,10 @@ try {
 }
 
 
-export const DELETE: APIRoute = async ({params, request}) => {
+export const DELETE: APIRoute = async ({ locals, params }) => {
     
 try {
+     const turso = getTursoClientFromLocals(locals);
      const clientId = Number(params.clientId ?? "");
      const deleteResult = await turso.execute({
       sql: "DELETE FROM Clients WHERE id = ?",

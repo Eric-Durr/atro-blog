@@ -1,20 +1,61 @@
 import { createClient } from "@libsql/client/web";
+import { env as cloudflareEnv } from "cloudflare:workers";
 
-const url = import.meta.env.ASTRO_DB_REMOTE_URL;
-const authToken = import.meta.env.ASTRO_DB_APP_TOKEN;
-
-if (!url) {
-  throw new Error("Missing ASTRO_DB_REMOTE_URL");
+interface TursoEnv {
+  ASTRO_DB_REMOTE_URL?: string;
+  ASTRO_DB_APP_TOKEN?: string;
 }
 
-if (!authToken) {
-  throw new Error("Missing ASTRO_DB_APP_TOKEN");
+interface RuntimeLocals {
+  runtime?: {
+    env?: TursoEnv;
+  };
 }
 
-export const turso = createClient({
-  url,
-  authToken,
-});
+const clientCache = new Map<string, ReturnType<typeof createClient>>();
+
+function resolveTursoEnv(runtimeEnv?: TursoEnv) {
+  const url =
+    runtimeEnv?.ASTRO_DB_REMOTE_URL ??
+    cloudflareEnv.ASTRO_DB_REMOTE_URL ??
+    import.meta.env.ASTRO_DB_REMOTE_URL;
+  const authToken =
+    runtimeEnv?.ASTRO_DB_APP_TOKEN ??
+    cloudflareEnv.ASTRO_DB_APP_TOKEN ??
+    import.meta.env.ASTRO_DB_APP_TOKEN;
+
+  if (!url) {
+    throw new Error("Missing ASTRO_DB_REMOTE_URL");
+  }
+
+  if (!authToken) {
+    throw new Error("Missing ASTRO_DB_APP_TOKEN");
+  }
+
+  return { url, authToken };
+}
+
+export function getTursoClient(runtimeEnv?: TursoEnv) {
+  const { url, authToken } = resolveTursoEnv(runtimeEnv);
+  const cacheKey = `${url}:${authToken}`;
+
+  const cachedClient = clientCache.get(cacheKey);
+  if (cachedClient) {
+    return cachedClient;
+  }
+
+  const client = createClient({
+    url,
+    authToken,
+  });
+
+  clientCache.set(cacheKey, client);
+  return client;
+}
+
+export function getTursoClientFromLocals(locals?: RuntimeLocals) {
+  return getTursoClient(locals?.runtime?.env);
+}
 
 export interface ClientRecord {
   id: number;
