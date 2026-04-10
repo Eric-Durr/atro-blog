@@ -2,22 +2,25 @@
   "name": "07-astro-http",
   "type": "module",
   "version": "0.0.1",
+  "engines": {
+    "node": "22.16.0"
+  },
   "scripts": {
-    "dev": "astro dev",
+    "dev": "ASTRO_LOCAL_ADAPTER=node astro dev",
     "dev:remote": "astro dev --remote",
     "build": "astro build --remote",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^12.6.12",
+    "@astrojs/cloudflare": "^13.1.8",
     "@astrojs/db": "^0.20.1",
-    "@astrojs/mdx": "^4.3.13",
-    "@astrojs/node": "^9.5.4",
-    "@astrojs/rss": "^4.0.15",
-    "@astrojs/sitemap": "^3.7.0",
-    "astro": "^5.17.1",
-    "sharp": "^0.34.3",
-    "wrangler": "^4.71.0"
+    "@astrojs/mdx": "^5.0.3",
+    "@astrojs/node": "^10.0.4",
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "^3.7.2",
+    "astro": "^6.1.5",
+    "sharp": "^0.34.5",
+    "wrangler": "^4.81.1"
   }
 }

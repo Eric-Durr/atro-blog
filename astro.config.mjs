@@ -5,14 +5,27 @@ import sitemap from '@astrojs/sitemap';
 import { defineConfig } from 'astro/config';
 
 import cloudflare from '@astrojs/cloudflare';
+import node from '@astrojs/node';
 
 import db from '@astrojs/db';
 
 // https://astro.build/config
 // update
+const useNodeAdapter = process.env.ASTRO_LOCAL_ADAPTER === 'node';
+
 export default defineConfig({
   site: 'https://example.com',
-  integrations: [mdx(), sitemap(), db()],
+  integrations: [
+    mdx(),
+    sitemap(),
+    ...(useNodeAdapter ? db() : db({ mode: 'web' })),
+  ],
   output: 'server',
-  adapter: cloudflare(),
+  adapter: useNodeAdapter
+    ? node({
+        mode: 'standalone',
+      })
+    : cloudflare({
+        prerenderEnvironment: 'node',
+      }),
 });
