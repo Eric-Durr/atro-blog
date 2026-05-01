@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 import {
-  getTursoClientFromLocals,
+  getTursoClient,
   parseClientRow,
   toSqlBoolean,
 } from "../../../lib/turso";
@@ -8,10 +8,10 @@ import {
 export const prerender = false;
 
 
-export const GET: APIRoute = async ({ locals, params }) => {
+export const GET: APIRoute = async ({ params }) => {
 
   try {
-    const turso = getTursoClientFromLocals(locals);
+    const turso = getTursoClient();
     const clientId = Number(params.clientId ?? "");
     const result = await turso.execute({
       sql: "SELECT id, name, age, isActive FROM Clients WHERE id = ?",
@@ -53,10 +53,10 @@ export const GET: APIRoute = async ({ locals, params }) => {
 
 
 
-export const PATCH: APIRoute = async ({ locals, params, request }) => {
+export const PATCH: APIRoute = async ({ params, request }) => {
   
 try {
-    const turso = getTursoClientFromLocals(locals);
+    const turso = getTursoClient();
     const body = await request.json();
     const clientId = Number(params.clientId ?? "");
     const updates = [];
@@ -130,10 +130,10 @@ try {
 }
 
 
-export const DELETE: APIRoute = async ({ locals, params }) => {
+export const DELETE: APIRoute = async ({ params }) => {
     
 try {
-     const turso = getTursoClientFromLocals(locals);
+     const turso = getTursoClient();
      const clientId = Number(params.clientId ?? "");
      const deleteResult = await turso.execute({
       sql: "DELETE FROM Clients WHERE id = ?",

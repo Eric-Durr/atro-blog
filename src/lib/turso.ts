@@ -6,12 +6,6 @@ interface TursoEnv {
   ASTRO_DB_APP_TOKEN?: string;
 }
 
-interface RuntimeLocals {
-  runtime?: {
-    env?: TursoEnv;
-  };
-}
-
 const clientCache = new Map<string, ReturnType<typeof createClient>>();
 
 function resolveTursoEnv(runtimeEnv?: TursoEnv) {
@@ -51,10 +45,6 @@ export function getTursoClient(runtimeEnv?: TursoEnv) {
 
   clientCache.set(cacheKey, client);
   return client;
-}
-
-export function getTursoClientFromLocals(locals?: RuntimeLocals) {
-  return getTursoClient(locals?.runtime?.env);
 }
 
 export interface ClientRecord {
