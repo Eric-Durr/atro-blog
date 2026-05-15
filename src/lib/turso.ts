@@ -65,6 +65,21 @@ export function parseClientRow(row: Record<string, unknown>): ClientRecord {
   };
 }
 
+export interface PostRecord {
+  id: number;
+  title: string;
+  likes: number;
+}
+
+export function parsePostRow(row: Record<string, unknown>): PostRecord {
+  return {
+    id: Number(row.id),
+    title: String(row.title ?? ""),
+    likes: Number(row.likes),
+  };
+}
+
+
 export function toSqlBoolean(value: unknown): number {
   return value === true || value === 1 || value === "1" ? 1 : 0;
 }

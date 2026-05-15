@@ -1,0 +1,37 @@
+---
+import { getCollection, render } from 'astro:content';
+import BlogPost from '@/layouts/BlogPost.astro';
+
+import LikeCounter from '@/components/likes/LikeCounter.vue';
+
+const slug = Astro.params.slug;
+const posts = await getCollection('blog');
+const post = posts.find((entry) => entry.id === slug);
+
+if (!post) {
+	Astro.response.status = 404;
+}
+
+const { Content } = post ? await render(post) : { Content: null };
+---
+
+{
+	post ? (
+		<BlogPost {...post.data}>
+			<div style="height: 50px;">
+				<LikeCounter postId={post.data.postId} client:load />
+			</div>
+
+			<Content />
+		</BlogPost>
+	) : (
+		<html lang="en">
+			<body>
+				<main style="padding: 2rem; font-family: sans-serif;">
+					<h1>Post not found</h1>
+					<p>No existe ningun post para el slug: {slug}</p>
+				</main>
+			</body>
+		</html>
+	)
+}
